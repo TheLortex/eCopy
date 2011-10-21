@@ -77,7 +77,7 @@
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
+         <widget class="QWidget" name="zone_transferts">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -86,28 +86,7 @@
             <height>146</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QToolBox" name="liste_ft">
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <widget class="QWidget" name="fichier_1">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>264</width>
-                <height>97</height>
-               </rect>
-              </property>
-              <attribute name="label">
-               <string>Page 1</string>
-              </attribute>
-             </widget>
-            </widget>
-           </item>
-          </layout>
+          <layout class="QGridLayout" name="gridLayout"/>
          </widget>
         </widget>
        </item>

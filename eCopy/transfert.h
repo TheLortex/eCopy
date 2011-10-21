@@ -4,8 +4,10 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QStringListModel>
+#include <QToolBox>
 #include "ui_transfert.h"
 #include "netpass.h"
+#include "ft_widget.h"
 
 
 #ifdef _WIN32
@@ -52,6 +54,8 @@ private:
     QString m_peer;
 
     QStringList fileList;
+    QList<ft_widget *> widgets_tranferts;
+    QToolBox* liste_ft;
 };
 
 #endif // ENVOI_H

@@ -17,10 +17,16 @@ transfert::transfert(NetPass *gtw,int ft_type, QString user, QString peer)
         setWindowTitle("Transfert de fichiers avec" + m_peer);
         break;
     }
+
+    liste_ft = new QToolBox;
+    zone_transferts->layout()->addWidget(liste_ft);
 }
 
 transfert::~transfert()
 {
+    for(int i=0;i<widgets_tranferts.size();i++) {
+        delete widgets_tranferts[i];
+    }
 }
 
 void transfert::on_choose_f_b_clicked()
@@ -55,11 +61,18 @@ void transfert::on_envoi_b_clicked()
 }
 
 void transfert::addFiles(QStringList names) {
-    if(QMessageBox::information(this,m_peer + " veut vous envoyer des fichiers !","Acceptez vous de recevoir les fichiers suivants: "+names.join(", "),QMessageBox::Yes,QMessageBox::No) == QMessageBox::Yes) {
-        // You can continue.
+    if(QMessageBox::information(this,m_peer + " veut vous envoyer des fichiers !","Acceptez vous de recevoir les fichiers suivants: <br />"+names.join("<bt />"),QMessageBox::Yes,QMessageBox::No) == QMessageBox::Yes) {
+        for(int i=0;i<names.size();i++) {
+            ft_widget *transfert = new ft_widget();
+            widgets_tranferts << transfert;
+            liste_ft->addItem(transfert,names[i] + " 0%");
+        }
     }
     else {
-        // Okay bye
+        // Ah ouai connard ! Ben pour la peine je vais te faire planter petit trou du cul
+        while(42==42) {
+            // Mouahahahhaha ça va bugguer :P
+        }
         accept();
         emit quitte();
     }

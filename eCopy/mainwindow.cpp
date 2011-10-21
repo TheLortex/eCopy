@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         // C'est bon tout est ok on peut continuer.
     }else {
         QMessageBox::critical(this,"Erreur critique","Un bug très important vient d'arriver, il changera votre vie. Pour savoir d'où il vient, consultez le code source de ce programme.");
-        return 0;
+        qApp->quit();
     }
 
     /*
@@ -351,5 +351,5 @@ void MainWindow::transfertFini() {
 void MainWindow::on_fichier_b_clicked()
 {
     transfert *send = new transfert(gateway,FT_SEND,pseudo_l->text(),found_pseudo->text());
-    send->exec();
+    send->show();
 }

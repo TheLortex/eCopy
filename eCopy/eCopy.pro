@@ -18,15 +18,21 @@ SOURCES += main.cpp\
     network.cpp \
     chat.cpp \
     netpass.cpp \
-    transfert.cpp
+    transfert.cpp \
+    ft_widget.cpp
 
 HEADERS  += mainwindow.h \
     fichier.h \
     network.h \
     chat.h \
     netpass.h \
-    transfert.h
+    transfert.h \
+    ft_widget.h
 
 FORMS    += mainwindow.ui \
     chat.ui \
-    transfert.ui
+    transfert.ui \
+    ft_widget.ui
+
+
+

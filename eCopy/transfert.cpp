@@ -57,7 +57,7 @@ void transfert::on_envoi_b_clicked()
             liste += "ede5526dz665g4e1z3c1cq354eg51evb6ef54h1j3se345gf86ez6zlareponseest42"; // separator
     }
 
-    m_gtw->envoyer(m_peer,"FILE SEND "+QString::number(m_user.split(" ").size())+" "+m_user+" "+liste);
+    m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" SEND "+liste);
 }
 
 void transfert::addFiles(QStringList names) {
@@ -67,7 +67,7 @@ void transfert::addFiles(QStringList names) {
             widgets_tranferts << transfert;
             liste_ft->addItem(transfert,names[i] + " 0%");
         }
-        m_gtw->envoyer(m_peer,"FILE OK");
+        m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" OK");
     }
     else {
         // Ah ouai connard ! Ben pour la peine je vais te faire planter petit trou du cul
@@ -76,5 +76,12 @@ void transfert::addFiles(QStringList names) {
         }
         accept();
         emit quitte();
+    }
+}
+
+void transfert::readytogo() {
+    QMessageBox::information(this,"\o/","Tu sais ton pote, ben il a accepter de recevoir tes fichiers ! Malheureusement ben il va rien recevoir.");
+    for(int i=0;i<liste_fichiers->size();i++) {
+        Fichier file(READ,liste_fichiers[i]);
     }
 }

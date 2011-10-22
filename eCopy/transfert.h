@@ -8,7 +8,7 @@
 #include "ui_transfert.h"
 #include "netpass.h"
 #include "ft_widget.h"
-
+#include "fichier.h"
 
 #ifdef _WIN32
 #define ENV_HOME "HOMEPATH"
@@ -29,7 +29,7 @@ public:
     ~transfert();
     QString getPeer(){return m_peer;}
     void addFiles(QStringList names);
-
+    void readytogo();
 protected:
     void majFileList();
 

@@ -3,12 +3,13 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setupUi(this);
+
     /*
       --------------------------------------------------------------------------------------------------------------------------------------------
       --------------------------------------------------------------------------------------------------------------------------------------------
       --------------------------------------------------------------------------------------------------------------------------------------------
-      --------------------------------------------------------------------------------------------------------------------------------------------
       ------------------------- /!\ Le code suivant est le plus important du programme, ne pas le supprimer /!\ ----------------------------------
+      --------------------------- Il fait des test pour savoir si les lois de l'Univers sont toujours actives ------------------------------------
       --------------------------------------------------------------------------------------------------------------------------------------------
       --------------------------------------------------------------------------------------------------------------------------------------------
       --------------------------------------------------------------------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     if((the_answer_to_life_the_universe_and_everything == 42)&&(1+1 == 2)&&(my_name_is == "lucas")) {
         // C'est bon tout est ok on peut continuer.
     }else {
-        QMessageBox::critical(this,"Erreur critique","Un bug très important vient d'arriver, il changera votre vie. Pour savoir d'où il vient, consultez le code source de ce programme.");
+        QMessageBox::critical(this,"Erreur critique","Un bug très important vient d'arriver, les lois de l'Univers sont chamboulées ! Pour savoir d'où il vient, consultez le grand chamane.");
         qApp->quit();
     }
 
@@ -195,26 +196,43 @@ void MainWindow::traiterMessage(QString message) {
     }
     else if(decomp[0]=="FILE") {
         decomp.removeFirst();
+        int taille = decomp[0].toInt();
+        decomp.removeFirst();
+        QString pseudo;
+        for(int i=0;i<taille;i++) {
+            pseudo += decomp[0];
+            decomp.removeFirst();
+            if(i!=taille-1)
+                pseudo += " ";
+        }
         if(decomp[0]=="SEND") {
             decomp.removeFirst();
-            int taille = decomp[0].toInt();
-            decomp.removeFirst();
-            QString pseudo;
-            for(int i=0;i<taille;i++) {
-                pseudo += decomp[0];
-                decomp.removeFirst();
-                if(i!=taille-1)
-                    pseudo += " ";
-            }
             QString liste_fichiers_brut = decomp.join(" ");
             QStringList liste_fichiers = liste_fichiers_brut.split("ede5526dz665g4e1z3c1cq354eg51evb6ef54h1j3se345gf86ez6zlareponseest42");
-            transfert *t = new transfert(gateway,FT_RECEIVE,pseudo_l->text(), pseudo);
-            connect(t,SIGNAL(quitte()),this,SLOT(transfertFini()));
 
-            t->show();
-            t->addFiles(liste_fichiers);
-            transferts << t;
-        } else if(decomp[0]=="TRANSFERT") {
+            bool exist = false;
+            for(int i=0;i<envois.size();i++) {
+                if(envois[i]->getPeer() == pseudo) {
+                    envois[i]->addFiles(liste_fichiers);
+                    exist = true;
+                }
+            }
+
+            if(!exist) {
+                transfert *t = new transfert(gateway,FT_RECEIVE,pseudo_l->text(), pseudo);
+                connect(t,SIGNAL(quitte()),this,SLOT(transfertFini()));
+
+                t->show();
+                t->addFiles(liste_fichiers);
+                transferts << t;
+            }
+        } else if(decomp[0]=="OK") {
+            decomp.removeFirst();
+            for(int i=0;i<envois.size();i++) {
+                if(envois[i]->getPeer() == pseudo) {
+                    envois[i]->readytogo();
+                }
+            }
 
         }
     }
@@ -271,7 +289,7 @@ void MainWindow::on_chercher_b_clicked()
 
 void MainWindow::on_actionReduire_triggered()
 {
-
+#ifdef _WIN32
     m_sticon = new QSystemTrayIcon(this); // on construit notre icône de notification
 
     // Création du menu contextuel de notre icône
@@ -302,6 +320,9 @@ void MainWindow::on_actionReduire_triggered()
     setGeometry(0,0,0,0);
 
     qApp->setQuitOnLastWindowClosed(false);
+#else
+    QMessageBox::warning(this,"Attention","Cette fonction n'a pas encore été portée sous Linux ... Veuillez attendre qu'une mise à jour arrive (ou pas).");
+#endif
 }
 
 void MainWindow::maximiser()
@@ -339,7 +360,8 @@ void MainWindow::chatFini() {
 
 void MainWindow::transfertFini() {
     transfert *t = qobject_cast<transfert *>(sender());
-    transferts.removeOne(t);
+    if(!transferts.removeOne(t))
+        envois.removeOne(t);
     delete t;
 }
 
@@ -347,5 +369,7 @@ void MainWindow::transfertFini() {
 void MainWindow::on_fichier_b_clicked()
 {
     transfert *send = new transfert(gateway,FT_SEND,pseudo_l->text(),found_pseudo->text());
+    connect(send,SIGNAL(quitte()),this,SLOT(transfertFini()));
     send->show();
+    envois << send;
 }

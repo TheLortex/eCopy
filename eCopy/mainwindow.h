@@ -72,6 +72,7 @@ private:
 
     QList<chat*> discussions;
     QList<transfert*> transferts;
+    QList<transfert*> envois;
 };
 
 #endif // MAINWINDOW_H

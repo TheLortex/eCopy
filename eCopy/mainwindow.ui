@@ -257,7 +257,7 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="2" colspan="4">
+              <item row="0" column="2" colspan="2">
                <widget class="QLineEdit" name="found_pseudo">
                 <property name="readOnly">
                  <bool>true</bool>
@@ -271,13 +271,6 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string>Port :</string>
-                </property>
-               </widget>
-              </item>
               <item row="4" column="0">
                <widget class="QLabel" name="label_6">
                 <property name="text">
@@ -285,21 +278,14 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="2" colspan="4">
-               <widget class="QLineEdit" name="found_port">
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="2" colspan="4">
+              <item row="4" column="2" colspan="2">
                <widget class="QLineEdit" name="found_co">
                 <property name="readOnly">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="3" column="2" colspan="4">
+              <item row="3" column="2" colspan="2">
                <widget class="QLineEdit" name="found_ip">
                 <property name="readOnly">
                  <bool>true</bool>
@@ -390,7 +376,6 @@
   <tabstop>vueInternet</tabstop>
   <tabstop>retour_b</tabstop>
   <tabstop>found_pseudo</tabstop>
-  <tabstop>found_port</tabstop>
   <tabstop>found_co</tabstop>
   <tabstop>found_ip</tabstop>
  </tabstops>

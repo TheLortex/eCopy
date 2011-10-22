@@ -133,7 +133,6 @@ void MainWindow::traiterMessage(QString message) {
     else if(decomp[0]=="FOUND") {
         if(decomp[1]=="0.0.0.0")  {
             found_ip->setText("0.0.0.0");
-            found_port->setText("NUL");
             found_co->setStyleSheet("color:red;");
             found_co->setText("Non");
             decomp.removeFirst();
@@ -148,8 +147,6 @@ void MainWindow::traiterMessage(QString message) {
             found_ip->setText(decomp[1]);
             found_co->setStyleSheet("color:green;");
             found_co->setText("Oui");
-            decomp.removeFirst();
-            found_port->setText(decomp[1]);
             decomp.removeFirst();
             decomp.removeFirst();
             found_pseudo->setText(decomp.join(" "));
@@ -236,8 +233,7 @@ void MainWindow::logon() {
     mdp.append( pass_l->text() );
     mdp_sha1 = QCryptographicHash::hash( mdp, QCryptographicHash::Sha1 );
     str_mdp_sha1 = mdp_sha1.toHex();
-    m_port = 3434;
-    reseau->envoyer("LOGON "+QString::number(m_port)+" "+str_mdp_sha1+" "+pseudo_l->text());
+    reseau->envoyer("LOGON "+str_mdp_sha1+" "+pseudo_l->text());
 }
 
 

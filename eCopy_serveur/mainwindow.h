@@ -48,7 +48,6 @@ private:
     QStringList m_pseudos;
     QStringList m_pass;
     QStringList m_co;
-    QStringList m_ports;
     QList<int> m_indexSock;
 
     QTimer *actUser;

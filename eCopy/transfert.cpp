@@ -67,6 +67,7 @@ void transfert::addFiles(QStringList names) {
             widgets_tranferts << transfert;
             liste_ft->addItem(transfert,names[i] + " 0%");
         }
+        m_gtw->envoyer(m_peer,"FILE OK");
     }
     else {
         // Ah ouai connard ! Ben pour la peine je vais te faire planter petit trou du cul

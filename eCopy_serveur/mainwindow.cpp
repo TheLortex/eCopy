@@ -84,8 +84,6 @@ void MainWindow::donneesRecues()
 void MainWindow::exec(QString cmd,int from) {
     QStringList decomp = cmd.split(" ");
     if(decomp[0].toUpper()=="LOGON") {
-        QString port = decomp[1];
-        decomp.removeFirst();
         QString pass = decomp[1];
         decomp.removeFirst();
         decomp.removeFirst();
@@ -97,7 +95,6 @@ void MainWindow::exec(QString cmd,int from) {
             if(m_pass[index]==pass) {
                 m_co[index] = "Connecté";
                 m_indexSock[index] = from;
-                m_ports[index] = port;
                 majListe();
                 envoyer("LOGGED",from);
             }
@@ -115,7 +112,7 @@ void MainWindow::exec(QString cmd,int from) {
         if(index!=-1) {
             QString message = "FOUND ";
             if(m_indexSock[index] != -1){
-                message += clients[m_indexSock[index]]->peerAddress().toString() + " " + m_ports[index] + " ";
+                message += clients[m_indexSock[index]]->peerAddress().toString() + " ";
             } else {
                 message += "0.0.0.0 ";
             }
@@ -156,9 +153,6 @@ void MainWindow::majListe(){
 
     QStringListModel *modelePass = new QStringListModel(m_pass);
     listePass->setModel(modelePass);
-
-    QStringListModel *modelePort = new QStringListModel(m_ports);
-    listePort->setModel(modelePort);
 }
 
 void MainWindow::deconnexionClient()
@@ -173,7 +167,6 @@ void MainWindow::deconnexionClient()
 
     if(m_indexSock.indexOf(index) != -1) {
         m_co[m_indexSock.indexOf(index)] = "Déconnecté";
-        m_ports[m_indexSock.indexOf(index)] = "";
         m_indexSock.replace(index,-1);
     }
 
@@ -228,13 +221,11 @@ void MainWindow::getUsers(){
 
         QStringList anc_pseudos=m_pseudos;
         QStringList anc_co=m_co;
-        QStringList anc_port=m_ports;
         QList<int> anc_index=m_indexSock;
 
         m_pseudos.clear();
         m_pass.clear();
         m_co.clear();
-        m_ports.clear();
         m_indexSock.clear();
 
         while ((row = mysql_fetch_row(result)))
@@ -245,12 +236,10 @@ void MainWindow::getUsers(){
            int index = anc_pseudos.indexOf(row[1]);
            if(index != -1) {
                m_co << anc_co[index];
-               m_ports << anc_port[index];
                m_indexSock << anc_index[index];
            }
            else {
                m_co << "Déconnecté";
-               m_ports << "";
                m_indexSock << -1;
            }
         }

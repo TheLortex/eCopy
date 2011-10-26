@@ -1,21 +1,33 @@
 #ifndef FICHIER_H
 #define FICHIER_H
 
-#include <QtGui>
+#include <QString>
+#include <QStringList>
+#include <QFile>
+#include <QTextStream>
+
+#include <fstream>
+#include <iostream>
+
 
 #define WRITE 1
 #define READ 2
+
+#define HASH_SIZE 256
+
+#define toChar() toStdString().c_str()
 
 class Fichier
 {
 public:
     Fichier(int mode,QString path);
-/*    void write(QString texte);
-    QList<QString> getContent() {return m_content;}
+    bool write(QString texte);
+    QStringList getContent() {return m_content;}
 protected:
-    void readFile();*/
+    QString readFile();
+    void hash(QString texte);
 private:
-    QList<QString> m_content;
+    QStringList m_content;
     int m_mode;
     QString m_chemin;
 

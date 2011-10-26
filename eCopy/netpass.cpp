@@ -22,7 +22,7 @@ void NetPass::envoyer(QString message) {
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
 
-    // On prépare le paquet à envoyer
+    // On prepare le paquet a envoyer
 
     qDebug()<<message;
 
@@ -44,7 +44,7 @@ void NetPass::envoyer(QString pseudo,QString message) {
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
 
-    // On prépare le paquet à envoyer
+    // On prepare le paquet à envoyer
 
     QString size = QString::number(pseudo.split(" ").size());
 
@@ -65,11 +65,11 @@ void NetPass::envoyer(QString pseudo,QString message) {
 
 
 void NetPass::connecte() {
-    emit event(CONNECTE,"Connexion au serveur réussie");
+    emit event(CONNECTE,"Connexion au serveur reussie");
 }
 
 void NetPass::deconnecte() {
-    emit event(DECONNECTE,"Déconnecté du serveur");
+    emit event(DECONNECTE,"Deconnecte du serveur");
 }
 
 void NetPass::erreurSocket(QAbstractSocket::SocketError erreur) {
@@ -77,16 +77,16 @@ void NetPass::erreurSocket(QAbstractSocket::SocketError erreur) {
 
     switch(erreur) {
     case QAbstractSocket::RemoteHostClosedError:
-        message = "Vous avez été déconnecté du serveur, veuillez vous reconnecter.";
+        message = "Vous avez ete deconnecte du serveur, veuillez vous reconnecter.";
         break;
     case QAbstractSocket::ConnectionRefusedError:
-        message = "Connexion refusée par le serveur, veuillez réessayer plus tard.";
+        message = "Connexion refusee par le serveur, veuillez réessayer plus tard.";
         break;
     case QAbstractSocket::HostNotFoundError:
-        message = "Serveur introuvable, êtes vous connecté à internet ?";
+        message = "Serveur introuvable, etes vous connecte a internet ?";
         break;
     default:
-        message = "Erreur de connexion, veuillez réessayer plus tard.";
+        message = "Erreur de connexion, veuillez reessayer plus tard.";
         break;
     }
 

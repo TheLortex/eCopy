@@ -30,6 +30,8 @@ public:
     QString getPeer(){return m_peer;}
     void addFiles(QStringList names);
     void readytogo();
+    void dataReceived(QString data);
+
 protected:
     void majFileList();
 
@@ -42,7 +44,7 @@ private slots:
     void on_quit_b_clicked() { accept(); emit quitte();}
     void on_quitter_b_clicked(){ accept();emit quitte();}
 
-    void on_stop_all_clicked(){ /*m_gtw->envoyer(m_peer,"FILE STOP"); */accept();emit quitte();}
+    void on_stop_all_clicked(){ accept();emit quitte();}
 
 signals:
     void quitte();
@@ -56,6 +58,8 @@ private:
     QStringList fileList;
     QList<ft_widget *> widgets_tranferts;
     QToolBox* liste_ft;
+
+    QList<Fichier *> tmp_files;
 };
 
 #endif // ENVOI_H

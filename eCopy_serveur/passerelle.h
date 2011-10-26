@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QObject>
+#include <QVBoxLayout>
+#include <QTextBrowser>
 
 #define PASSERELLE_PORT 2012
 
@@ -37,8 +39,11 @@ private:
     QTcpServer *serveur;
     QList<QTcpSocket *> clients;
     quint32 tailleMessage;
+
     QQueue<Message> m_toSend;
     QTimer *m_watchQueue;
+
+    QTextBrowser *etat;
 };
 
 #endif // PASSERELLE_H

@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     if((the_answer_to_life_the_universe_and_everything == 42)&&(1+1 == 2)&&(my_name_is == "lucas")) {
         // C'est bon tout est ok on peut continuer.
     }else {
-        QMessageBox::critical(this,"Erreur critique","Un bug très important vient d'arriver, les lois de l'Univers sont chamboulées ! Pour savoir d'où il vient, consultez le grand chamane.");
+        QMessageBox::critical(this,"Erreur critique","Un bug très important vient d'arriver, les lois de l'Univers sont chamboulees ! Pour savoir d'ou il vient, consultez le grand chamane.");
         qApp->quit();
     }
 
@@ -121,7 +121,7 @@ void MainWindow::traiterMessage(QString message) {
         m_logged = true;
         info_l->setText("Bonjour "+pseudo_l->text()+" ! <br /> Que voulez-vous faire ?");
         stackedWidget->setCurrentIndex(2);
-        status->showMessage("Identification réussie",10000);
+        status->showMessage("Identification reussie",10000);
     }
     else if(decomp[0]=="BAD") {
         if(decomp[1]=="PASSWORD"){
@@ -158,7 +158,7 @@ void MainWindow::traiterMessage(QString message) {
         }
     }
     else if(decomp[0]=="NOT_FOUND") {
-        found_pseudo->setText("Pseudo non trouvé !");
+        found_pseudo->setText("Pseudo non trouve !");
         found_ip->setText("");
         found_co->setText("");
         message_b->setEnabled(false);
@@ -211,9 +211,9 @@ void MainWindow::traiterMessage(QString message) {
             QStringList liste_fichiers = liste_fichiers_brut.split("ede5526dz665g4e1z3c1cq354eg51evb6ef54h1j3se345gf86ez6zlareponseest42");
 
             bool exist = false;
-            for(int i=0;i<envois.size();i++) {
-                if(envois[i]->getPeer() == pseudo) {
-                    envois[i]->addFiles(liste_fichiers);
+            for(int i=0;i<transferts.size();i++) {
+                if(transferts[i]->getPeer() == pseudo) {
+                    transferts[i]->addFiles(liste_fichiers);
                     exist = true;
                 }
             }
@@ -234,6 +234,13 @@ void MainWindow::traiterMessage(QString message) {
                 }
             }
 
+        } else if(decomp[0]=="PART") {
+            decomp.removeFirst();
+            for(int i=0;i<transferts.size();i++) {
+                if(transferts[i]->getPeer() == pseudo) {
+                    transferts[i]->dataReceived(decomp.join(" "));
+                }
+            }
         }
     }
     else  {
@@ -292,7 +299,7 @@ void MainWindow::on_actionReduire_triggered()
 #ifdef _WIN32
     m_sticon = new QSystemTrayIcon(this); // on construit notre icône de notification
 
-    // Création du menu contextuel de notre icône
+    // Creation du menu contextuel de notre icone
     QMenu* stmenu = new QMenu(this);
 
     QAction* actOuvrir = new QAction("Ouvrir",this);
@@ -304,13 +311,13 @@ void MainWindow::on_actionReduire_triggered()
     stmenu->addAction(actOuvrir);
     stmenu->addAction(actQuitter);
 
-    m_sticon->setContextMenu(stmenu); // On assigne le menu contextuel à l'icône de notification
+    m_sticon->setContextMenu(stmenu); // On assigne le menu contextuel à l'icone de notification
 
     m_sticon->setIcon(QIcon(QPixmap(15,15)));
 
     connect(m_sticon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(systray_activated(QSystemTrayIcon::ActivationReason)));
 
-    m_sticon->show(); // On affiche l'icône
+    m_sticon->show(); // On affiche l'icone
     m_sticon->showMessage("Information","Je reste ici ..."); // On affiche une infobulle
 
     m_reduit = true;
@@ -321,7 +328,7 @@ void MainWindow::on_actionReduire_triggered()
 
     qApp->setQuitOnLastWindowClosed(false);
 #else
-    QMessageBox::warning(this,"Attention","Cette fonction n'a pas encore été portée sous Linux ... Veuillez attendre qu'une mise à jour arrive (ou pas).");
+    QMessageBox::warning(this,"Attention","Cette fonction n'a pas encore ete portee sous Linux ... Veuillez attendre qu'une mise à jour arrive (ou pas).");
 #endif
 }
 

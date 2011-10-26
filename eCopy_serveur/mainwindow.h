@@ -1,11 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QtGui>
 #include <QtNetwork>
 #ifdef _WIN32
-    #include <winsock.h>
-    #include <MYSQL/mysql.h>
+   // #include <winsock.h>
+   // #include <MYSQL/mysql.h>
 #else
     #include <mysql/mysql.h>
 #endif
@@ -15,6 +16,7 @@
 #define BDD_HOST "127.0.0.1"
 #define BDD_USER "root"
 #define BDD_PASS "Posit52a"
+#define WITH_MYSQL
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {

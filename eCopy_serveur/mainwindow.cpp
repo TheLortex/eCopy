@@ -5,6 +5,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupUi(this);
     setWindowTitle(tr("eCopy - Serveur"));
 
+#ifndef WITH_MYSQL
+    m_pseudos << "lucas" << "test";
+    m_pass << "40bd001563085fc35165329ea1ff5c5ecbdbbeef" << "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
+    m_co << "Déconnecté" << "Déconnecté";
+    m_indexSock << -1 << -1;
+
+    majListe();
+#endif
+
     // Gestion du serveur
     serveur = new QTcpServer(this);
     if (!serveur->listen(QHostAddress::Any, 2011)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50585
@@ -153,6 +162,14 @@ void MainWindow::majListe(){
 
     QStringListModel *modelePass = new QStringListModel(m_pass);
     listePass->setModel(modelePass);
+
+    QStringList liste_sock;
+    for(int i=0;i<m_indexSock.size();i++) {
+        liste_sock << QString::number(m_indexSock[i]);
+    }
+
+    QStringListModel *modeleSock = new QStringListModel(liste_sock);
+    listeSocket->setModel(modeleSock);
 }
 
 void MainWindow::deconnexionClient()
@@ -196,10 +213,9 @@ void MainWindow::envoyer(const QString &message, int dest) {
 }
 
 
-/* m_pseudos << query.value(1).toString();
- m_pass << query.value(2).toString();
- m_co << "Déconnecté";*/
+
 void MainWindow::getUsers(){
+#ifdef WITH_MYSQL
     MYSQL bdd;
 
     mysql_init(&bdd);
@@ -228,6 +244,9 @@ void MainWindow::getUsers(){
         m_co.clear();
         m_indexSock.clear();
 
+
+        majListe();
+
         while ((row = mysql_fetch_row(result)))
         {
            m_pseudos << QString(row[1]);
@@ -252,10 +271,15 @@ void MainWindow::getUsers(){
     {
         etat->append("Erreur lors de la connexion à la base de données.");
     }
+#endif
 }
 
 int MainWindow::getSocketIdByName(QString pseudo) {
     int index = m_pseudos.indexOf(pseudo);
+   // QMessageBox::information(this,"Title","Information: "+m_pseudos.join(" : "));
+   // if((m_pseudos[0] == pseudo) && (m_pseudos[1] == pseudo))
+      //  QMessageBox::information(this,"Trololol","Trololol");
+  //  QMessageBox::information(this,"Title","Information: "+pseudo+" => "+QString::number(index));
 
     if(index != -1) {
         return m_indexSock[index];
@@ -266,7 +290,11 @@ int MainWindow::getSocketIdByName(QString pseudo) {
 }
 
 void MainWindow::writeOutput(QString text) {
+#ifdef _WIN32
+    QFile file(".\\answer");
+#else
     QFile file("./answer");
+#endif
     if(file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
 
@@ -275,7 +303,11 @@ void MainWindow::writeOutput(QString text) {
 }
 
 void MainWindow::readInputFile() {
+#ifdef _WIN32
+    QFile file(".\\ask");
+#else
     QFile file("./ask");
+#endif
     if(!file.open(QIODevice::ReadOnly))
         return;
 
@@ -285,7 +317,6 @@ void MainWindow::readInputFile() {
 
     QStringList lines = text.split("\n");
     for(int i=0;i<lines.size();i++) {
-
         writeOutput(QString::number(getSocketIdByName(lines[i]))+" "+lines[i]);
     }
 }

@@ -17,6 +17,7 @@ public:
     void connecter();
     void envoyer(QString message);
     void envoyer(QString pseudo,QString message);
+    QTcpSocket* getSocket() {return socket; }
 
 public slots:
     void connecte();

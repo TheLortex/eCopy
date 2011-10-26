@@ -37,11 +37,8 @@ void chat::termine() {
     emit quitte();
 }
 
-void chat::on_messageAEnvoyer_returnPressed()
-{
-  //  on_envoyer_b_clicked();
-}
+void chat::on_messageAEnvoyer_returnPressed(){} // Je sais pas pourquoi, ca marche que si je défini cette fonction.
 
 void chat::ajouterMessage(QString message) {
-    box_chat->append("<span>"+ message + "</span> <br />");
+    box_chat->append("<span>"+ message + "</span>");
 }

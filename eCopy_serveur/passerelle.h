@@ -40,7 +40,8 @@ private:
     QList<QTcpSocket *> clients;
     quint32 tailleMessage;
 
-    QQueue<Message> m_toSend;
+    //QQueue<Message> m_toSend;
+    QVector<Message> m_toSend;
     QTimer *m_watchQueue;
 
     QTextBrowser *etat;

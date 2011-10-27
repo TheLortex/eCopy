@@ -88,7 +88,10 @@ void passerelle::donneesRecues()
     m.index = -1;
     m.pseudo = pseudo;
     m.message = decomp.join(" ");
-    m_toSend.enqueue(m);
+
+    m_toSend.append(m);
+
+    //m_toSend.enqueue(m);
 
     tailleMessage = 0;
 }
@@ -120,28 +123,32 @@ void passerelle::envoyer(const QString &message, int dest) {
 }
 
 void passerelle::actQueue() {
-    for(int i=0;i<m_toSend.size();i++) {
+    //for(int i=0;i<m_toSend.size();i++) {
        // QMessageBox::information(NULL,"Test",m_toSend.at(i).message + " de " + m_toSend.at(i).pseudo + " sur index " + QString::number(m_toSend.at(i).index) + " demande " + m_toSend.at(i).demande) ;
-    }
+    //}
 
     if(m_toSend.size() != 0) {
-        Message mess = m_toSend.dequeue();
+        Message mess = m_toSend[0];
+      //  Message mess = m_toSend.dequeue();
         if(mess.index != -1) {
             if(mess.index != -2) {
+                clients[mess.index]->waitForBytesWritten();
                 envoyer(mess.message,mess.index);
                 etat->append(mess.message + " envoié à " + mess.pseudo);
             }
+            m_toSend.remove(0);
         }
         else if(mess.demande == false) {
             askByFile(mess.pseudo);
 
 
 
-            mess.demande = true;
-            m_toSend.enqueue(mess);
+          //  mess.demande = true;
+            m_toSend[0].demande = true;
+      //      m_toSend.enqueue(mess);
         }
         else {
-            m_toSend.enqueue(mess);
+       //     m_toSend.enqueue(mess);
             actInFile();
         }
     }
@@ -182,13 +189,19 @@ void passerelle::actInFile() {
         int curIndex = curLine[0].toInt();
         curLine.removeFirst();
         QString pseudo = curLine.join(" ");
-        for(int i2 = 0;i2 < m_toSend.size();i2++) {
+       /* for(int i2 = 0;i2 < m_toSend.size();i2++) {
             if(m_toSend[i2].pseudo == pseudo) {
                 if(curIndex == -1)
                     m_toSend[i2].index = -2;
                 else
                     m_toSend[i2].index = curIndex;
             }
+        }*/
+        if(m_toSend[0].pseudo == pseudo) {
+            if(curIndex == -1)
+                m_toSend[0].index = -2;
+            else
+                m_toSend[0].index = curIndex;
         }
 
     }

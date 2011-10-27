@@ -11,7 +11,7 @@ transfert::transfert(NetPass *gtw,int ft_type, QString user, QString peer)
     switch(ft_type) {
     case FT_SEND:
         stackedWidget->setCurrentIndex(0);
-        setWindowTitle("Envoi de fichiers a (avec un accent mais y'a un bug d'encodage de caracteres alors je le met pas, donc pensez pas que je suis nul en Francais c'est juste que ca marche pas.) " + m_peer);
+        setWindowTitle("Envoi de fichiers a " + m_peer);
         break;
     case FT_RECEIVE:
         stackedWidget->setCurrentIndex(1);
@@ -116,7 +116,7 @@ void transfert::readytogo() {
         for(int i=0;i<content.size();i++) {
             m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" PART "+ QString::number(curIndex) +" "+QString::number(i)+" "+QString::number(content.size())+" "+content[i]);
             m_gtw->getSocket()->waitForBytesWritten();
-            double coef = i / content.size();
+            double coef = (i+1) / (content.size()*1.0);
             int pourcentage = coef*100;
             widgets_tranferts[curIndex]->setPourcentage(pourcentage);
         }

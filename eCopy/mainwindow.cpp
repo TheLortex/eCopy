@@ -241,6 +241,12 @@ void MainWindow::traiterMessage(QString message) {
                     transferts[i]->dataReceived(decomp.join(" "));
                 }
             }
+        } else if(decomp[0]=="NEXT") {
+            for(int i=0;i<envois.size();i++) {
+                if(envois[i]->getPeer() == pseudo) {
+                    envois[i]->sendNext();
+                }
+            }
         }
     }
     else  {

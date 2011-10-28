@@ -82,7 +82,7 @@ void transfert::addFiles(QStringList names) {
         accept();
         emit quitte();
     }
-    fileList = names;
+    fileList += names;
 }
 
 void transfert::dataReceived(QString data) {
@@ -99,6 +99,11 @@ void transfert::dataReceived(QString data) {
         QMessageBox::critical(this,"Erreur fatale","Le système IO à totalement foiré ! Impossible d'écrire dans le fichier. A mon avis y'a un problème de permissions xD lol mdr ptdr TROLOLOLOLOL");
     }
 
+    m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" NEXT");
+
+    double coef = (index_cur_part+1) / (total_part*1.0);
+    int pourcentage = coef*100;
+    widgets_tranferts[indexFichier]->setPourcentage(pourcentage);
 }
 
 void transfert::readytogo() {
@@ -110,15 +115,31 @@ void transfert::readytogo() {
         liste_ft->addItem(transfert,fileList[i] + " 0%");
     }
 
-    for(int curIndex=0;curIndex< fileList.size();curIndex++) {
-        Fichier file(READ,fileList[curIndex]);
+    curFichier = 0;
+    curPart = 0;
+
+    sendNext();
+}
+
+void transfert::sendNext() {
+    if(fileList != fileList.size()) {
+        Fichier file(READ,fileList[curFichier]);
         QStringList content = file.getContent();
-        for(int i=0;i<content.size();i++) {
-            m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" PART "+ QString::number(curIndex) +" "+QString::number(i)+" "+QString::number(content.size())+" "+content[i]);
-            m_gtw->getSocket()->waitForBytesWritten();
-            double coef = (i+1) / (content.size()*1.0);
-            int pourcentage = coef*100;
-            widgets_tranferts[curIndex]->setPourcentage(pourcentage);
+
+        m_gtw->envoyer(m_peer,"FILE "+QString::number(m_user.split(" ").size())+" "+m_user+" PART "+ QString::number(curFichier) +" "+QString::number(curPart)+" "+QString::number(content.size())+" "+content[curPart]);
+        m_gtw->getSocket()->waitForBytesWritten();
+        double coef = (curPart+1) / (content.size()*1.0);
+        int pourcentage = coef*100;
+        widgets_tranferts[curFichier]->setPourcentage(pourcentage);
+        widgets_tranferts[curFichier]->setWindowTitle(fileList[i] + " "+QString::number(pourcentage)+ "%");
+
+        curPart++;
+        if(curPart==content.size()) {
+            curPart = 0;
+            curFichier++;
         }
+    }
+    else {
+        // Terminé.
     }
 }

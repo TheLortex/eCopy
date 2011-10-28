@@ -34,7 +34,6 @@ public slots:
     void deconnexionClient();
 
     void actQueue();
-
 private:
     QTcpServer *serveur;
     QList<QTcpSocket *> clients;
@@ -42,6 +41,7 @@ private:
 
     //QQueue<Message> m_toSend;
     QVector<Message> m_toSend;
+    QVector<QPair<QString,int> > m_cache;
     QTimer *m_watchQueue;
 
     QTextBrowser *etat;

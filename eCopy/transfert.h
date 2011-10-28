@@ -31,6 +31,7 @@ public:
     void addFiles(QStringList names);
     void readytogo();
     void dataReceived(QString data);
+    void sendNext();
 
 protected:
     void majFileList();
@@ -60,6 +61,8 @@ private:
     QToolBox* liste_ft;
 
     QList<Fichier *> tmp_files;
+    int curFichier;
+    int curPart;
 };
 
 #endif // ENVOI_H

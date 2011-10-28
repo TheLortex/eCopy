@@ -13,10 +13,10 @@ passerelle::passerelle() {
 
     if(serveur->listen(QHostAddress::Any,PASSERELLE_PORT)) {
         connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
-        label->setText("Serveur démarré sur le port "+QString::number(PASSERELLE_PORT)+".");
+        label->setText("Serveur demarre sur le port "+QString::number(PASSERELLE_PORT)+".");
     }
     else {
-        label->setText("Le serveur de la passerelle n'a pas pu démarrer !");
+        label->setText("Le serveur de la passerelle n'a pas pu demarrer !");
     }
 
     layout->addWidget(label);
@@ -98,9 +98,9 @@ void passerelle::donneesRecues()
 
 void passerelle::deconnexionClient()
 {
-    // On détermine quel client se déconnecte
+    // On determine quel client se deconnecte
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
-    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
+    if (socket == 0) // Si par hasard on n'a pas trouve le client a l'origine du signal, on arrete la methode
         return;
 
     clients.removeOne(socket);
@@ -112,10 +112,10 @@ void passerelle::envoyer(const QString &message, int dest) {
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
 
-    out << (quint32) 0; // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-    out << message; // On ajoute le message à la suite
-    out.device()->seek(0); // On se replace au début du paquet
-    out << (quint32) (paquet.size() - sizeof(quint32)); // On écrase le 0 qu'on avait réservé par la longueur du message
+    out << (quint32) 0; // On ecrit 0 au debut du paquet pour reserver la place pour ecrire la taille
+    out << message; // On ajoute le message a la suite
+    out.device()->seek(0); // On se replace au debut du paquet
+    out << (quint32) (paquet.size() - sizeof(quint32)); // On ecrase le 0 qu'on avait reserve par la longueur du message
 
     if(clients.size() > dest) {
         clients[dest]->write(paquet);
@@ -123,32 +123,39 @@ void passerelle::envoyer(const QString &message, int dest) {
 }
 
 void passerelle::actQueue() {
-    //for(int i=0;i<m_toSend.size();i++) {
-       // QMessageBox::information(NULL,"Test",m_toSend.at(i).message + " de " + m_toSend.at(i).pseudo + " sur index " + QString::number(m_toSend.at(i).index) + " demande " + m_toSend.at(i).demande) ;
-    //}
+   // etat->append("------------------"+QString::number(m_toSend.size())+"--------------------");
+    /*etat->append("------------------------------------------------");
+    for(int i=0;i<m_toSend.size();i++) {
+       etat->append("PSEUDO: " + m_toSend[i].pseudo + " ||| INDEX: "+QString::number(m_toSend[i].index) + " ||| DEMANDE: "+m_toSend[i].demande);
+    }
+
+    etat->append("------------------------------------------------");*/
 
     if(m_toSend.size() != 0) {
-        Message mess = m_toSend[0];
-      //  Message mess = m_toSend.dequeue();
-        if(mess.index != -1) {
-            if(mess.index != -2) {
-                clients[mess.index]->waitForBytesWritten();
-                envoyer(mess.message,mess.index);
-                etat->append(mess.message + " envoié à " + mess.pseudo);
+        if(m_toSend[0].index != -1) {
+            if(m_toSend[0].index != -2) {
+                clients[m_toSend[0].index]->waitForBytesWritten();
+                envoyer(m_toSend[0].message,m_toSend[0].index);
+                etat->append(m_toSend[0].message + " envoie a " + m_toSend[0].pseudo);
             }
             m_toSend.remove(0);
         }
-        else if(mess.demande == false) {
-            askByFile(mess.pseudo);
+        else if(m_toSend[0].demande == false) {
+            bool found = false;
 
+            for(int i=0;i<m_cache.size();i++) {
+                if(m_toSend[0].pseudo == m_cache[i].first) {
+                    m_toSend[0].index = m_cache[i].second;
+                    found = true;
+                }
+            }
 
-
-          //  mess.demande = true;
-            m_toSend[0].demande = true;
-      //      m_toSend.enqueue(mess);
+            if(!found) {
+                askByFile(m_toSend[0].pseudo);
+                m_toSend[0].demande = true;
+            }
         }
         else {
-       //     m_toSend.enqueue(mess);
             actInFile();
         }
     }
@@ -204,8 +211,19 @@ void passerelle::actInFile() {
                 m_toSend[0].index = curIndex;
         }
 
+        if(curIndex != -1) {
+            if(m_cache.size() < 100) {
+                m_cache.append(QPair<QString,int>(pseudo,curIndex));
+            } else {
+                m_cache.remove(0);
+                m_cache.append(QPair<QString,int>(pseudo,curIndex));
+            }
+        }
+
     }
 
     file.remove();
     file.close();
 }
+
+
